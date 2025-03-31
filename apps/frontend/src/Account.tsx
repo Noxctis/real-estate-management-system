@@ -9,7 +9,7 @@ type Profile = {
 };
 
 type AccountProps = {
-  session: any;
+  session: import('@supabase/supabase-js').Session;
 };
 
 export default function Account({ session }: AccountProps) {
@@ -17,7 +17,7 @@ export default function Account({ session }: AccountProps) {
   const [profile, setProfile] = useState<Profile>({ username: null, website: null, avatar_url: null });
 
   useEffect(() => {
-    let ignore = false;
+    const ignore = false;
     async function getProfile() {
       setLoading(true);
       const { user } = session;
