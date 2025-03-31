@@ -23,5 +23,20 @@
   ],
   "dependencies": {
     "@supabase/supabase-js": "^2.49.1"
-  }
+  },
+  "version": "1.0.0",
+  "description": "This Turborepo starter is maintained by the Turborepo core team.",
+  "main": "index.js",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Noxctis/real-estate-management-system.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/Noxctis/real-estate-management-system/issues"
+  },
+  "homepage": "https://github.com/Noxctis/real-estate-management-system#readme"
 }
