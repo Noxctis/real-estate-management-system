@@ -1,5 +1,6 @@
 import { useContext } from "react";
 import SearchBar from "../../components/searchBar/SearchBar";
+import BgVisuals from "../../components/BgVisuals/BgVisuals";
 import "./homePage.scss";
 import { AuthContext } from "../../context/AuthContext";
 
@@ -11,12 +12,12 @@ function HomePage() {
     <div className="homePage">
       <div className="textContainer">
         <div className="wrapper">
-          <h1 className="title">Find Real Estate & Get Your Dream Place</h1>
+          <h1 className="title">Discover Your Perfect Property: Homes, Condos, and More Await!</h1>
           <p>
-            Lorem ipsum dolor sit amet consectetur adipisicing elit. Eos
-            explicabo suscipit cum eius, iure est nulla animi consequatur
-            facilis id pariatur fugit quos laudantium temporibus dolor ea
-            repellat provident impedit!
+            Explore our extensive listings of quality real estate in prime locations. 
+            Whether you're looking to buy or rent, our dedicated agents are here to 
+            guide you every step of the way. 
+            Start your search today and unlock the door to your ideal property!
           </p>
           <SearchBar />
           <div className="boxes">
@@ -35,9 +36,7 @@ function HomePage() {
           </div>
         </div>
       </div>
-      <div className="imgContainer">
-        <img src="/bg.png" alt="" />
-      </div>
+      <BgVisuals />
     </div>
   );
 }

@@ -9,6 +9,9 @@ import Register from "./routes/register/register";
 import ProfileUpdatePage from "./routes/profileUpdatePage/profileUpdatePage";
 import NewPostPage from "./routes/newPostPage/newPostPage";
 import { listPageLoader, profilePageLoader, singlePageLoader } from "./lib/loaders";
+import About from "./routes/aboutPage/aboutPage";
+import ContactPage from "./routes/contactPage/contactPage";
+import AgentsPage from "./routes/agentsPage/agentsPage";
 
 function App() {
   const router = createBrowserRouter([
@@ -30,7 +33,6 @@ function App() {
           element: <SinglePage />,
           loader: singlePageLoader,
         },
-
         {
           path: "/login",
           element: <Login />,
@@ -38,6 +40,18 @@ function App() {
         {
           path: "/register",
           element: <Register />,
+        },
+        {
+          path: "/about",
+          element: <About />,
+        },
+        {
+          path: "/contact",
+          element: <ContactPage />,
+        },
+        {
+          path: "/agents",
+          element: <AgentsPage />,
         },
       ],
     },

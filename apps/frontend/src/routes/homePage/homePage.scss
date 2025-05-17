@@ -65,19 +65,29 @@
     position: relative;
     display: flex;
     align-items: center;
+    justify-content: center;
+    overflow: visible;
 
     @include md {
       display: none;
     }
 
-    img {
-      width: 115%;
-      position: absolute;
-      right: 0;
-
-      @include lg {
-        width: 105%;
-      }
+    .main-bg {
+      width: 100%;
+      max-width: 550px;
+      border-radius: 24px;
+      position: relative;
+      z-index: 1;
     }
+
+    .shape1 {
+      position: absolute;
+      top: 40px;
+      right: 60px;
+      width: 80px;
+      z-index: 2;
+    }
+
+  
   }
 }
