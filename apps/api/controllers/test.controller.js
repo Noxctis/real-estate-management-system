@@ -1,3 +1,4 @@
+// File: apps/api/controller/test.controller.js
 import jwt from "jsonwebtoken";
 
 export const shouldBeLoggedIn = async (req, res) => {

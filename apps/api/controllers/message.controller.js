@@ -1,3 +1,4 @@
+// File: apps/api/controller/message.controller.js
 import prisma from "../lib/prisma.js";
 
 export const addMessage = async (req, res) => {

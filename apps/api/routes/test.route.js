@@ -1,3 +1,4 @@
+// File: apps/api/routes/test.route.js
 import express from "express";
 import { shouldBeAdmin, shouldBeLoggedIn } from "../controllers/test.controller.js";
 import { verifyToken } from "../middleware/verifyToken.js";

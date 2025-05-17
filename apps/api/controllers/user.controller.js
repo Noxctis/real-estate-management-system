@@ -1,3 +1,4 @@
+// File: apps/api/controller/user.controller.js
 import prisma from "../lib/prisma.js";
 import bcrypt from "bcrypt";
 

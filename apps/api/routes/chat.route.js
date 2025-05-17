@@ -1,3 +1,4 @@
+// File: apps/api/routes/chat.route.js
 import express from "express";
 import {
   getChats,

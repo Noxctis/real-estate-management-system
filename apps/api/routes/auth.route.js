@@ -1,3 +1,4 @@
+// File: apps/api/routes/auth.route.js
 import express from "express";
 import { login, logout, register } from "../controllers/auth.controller.js";
 

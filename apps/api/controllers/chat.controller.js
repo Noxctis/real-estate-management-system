@@ -1,3 +1,4 @@
+// File: apps/api/controller/chat.controller.js
 import prisma from "../lib/prisma.js";
 
 export const getChats = async (req, res) => {
