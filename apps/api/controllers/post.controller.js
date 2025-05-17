@@ -1,3 +1,5 @@
+// apps/api/controllers/post.controller.js
+
 import prisma from "../lib/prisma.js";
 import jwt from "jsonwebtoken";
 
@@ -7,8 +9,8 @@ export const getPosts = async (req, res) => {
   try {
     const posts = await prisma.post.findMany({
       where: {
-        city: query.city || undefined,
-        type: query.type || undefined,
+        city:   query.city    || undefined,
+        type:   query.type    || undefined,
         property: query.property || undefined,
         bedroom: parseInt(query.bedroom) || undefined,
         price: {
@@ -18,18 +20,18 @@ export const getPosts = async (req, res) => {
       },
     });
 
-    // setTimeout(() => {
-    res.status(200).json(posts);
-    // }, 3000);
+    return res.status(200).json(posts);
   } catch (err) {
-    console.log(err);
-    res.status(500).json({ message: "Failed to get posts" });
+    console.error(err);
+    return res.status(500).json({ message: "Failed to get posts" });
   }
 };
 
 export const getPost = async (req, res) => {
-  const id = req.params.id;
+  const { id } = req.params;
+
   try {
+    // 1. Fetch the post with its details and author info
     const post = await prisma.post.findUnique({
       where: { id },
       include: {
@@ -43,27 +45,37 @@ export const getPost = async (req, res) => {
       },
     });
 
-    const token = req.cookies?.token;
-
-    if (token) {
-      jwt.verify(token, process.env.JWT_SECRET_KEY, async (err, payload) => {
-        if (!err) {
-          const saved = await prisma.savedPost.findUnique({
-            where: {
-              userId_postId: {
-                postId: id,
-                userId: payload.id,
-              },
-            },
-          });
-          res.status(200).json({ ...post, isSaved: saved ? true : false });
-        }
-      });
+    if (!post) {
+      return res.status(404).json({ message: "Post not found" });
     }
-    res.status(200).json({ ...post, isSaved: false });
+
+    // 2. Default isSaved to false
+    let isSaved = false;
+
+    // 3. If there's a token, verify it and check saved status
+    const token = req.cookies?.token;
+    if (token) {
+      try {
+        const payload = jwt.verify(token, process.env.JWT_SECRET_KEY);
+        const saved = await prisma.savedPost.findUnique({
+          where: {
+            userId_postId: {
+              userId: payload.id,
+              postId: id,
+            },
+          },
+        });
+        isSaved = Boolean(saved);
+      } catch (jwtErr) {
+        // Invalid token — ignore and leave isSaved = false
+      }
+    }
+
+    // 4. Send a single response
+    return res.status(200).json({ ...post, isSaved });
   } catch (err) {
-    console.log(err);
-    res.status(500).json({ message: "Failed to get post" });
+    console.error(err);
+    return res.status(500).json({ message: "Failed to get post" });
   }
 };
 
@@ -81,19 +93,20 @@ export const addPost = async (req, res) => {
         },
       },
     });
-    res.status(200).json(newPost);
+    return res.status(200).json(newPost);
   } catch (err) {
-    console.log(err);
-    res.status(500).json({ message: "Failed to create post" });
+    console.error(err);
+    return res.status(500).json({ message: "Failed to create post" });
   }
 };
 
 export const updatePost = async (req, res) => {
   try {
-    res.status(200).json();
+    // TODO: implement update logic
+    return res.status(200).json({});
   } catch (err) {
-    console.log(err);
-    res.status(500).json({ message: "Failed to update posts" });
+    console.error(err);
+    return res.status(500).json({ message: "Failed to update post" });
   }
 };
 
@@ -102,21 +115,18 @@ export const deletePost = async (req, res) => {
   const tokenUserId = req.userId;
 
   try {
-    const post = await prisma.post.findUnique({
-      where: { id },
-    });
-
+    const post = await prisma.post.findUnique({ where: { id } });
+    if (!post) {
+      return res.status(404).json({ message: "Post not found" });
+    }
     if (post.userId !== tokenUserId) {
       return res.status(403).json({ message: "Not Authorized!" });
     }
 
-    await prisma.post.delete({
-      where: { id },
-    });
-
-    res.status(200).json({ message: "Post deleted" });
+    await prisma.post.delete({ where: { id } });
+    return res.status(200).json({ message: "Post deleted" });
   } catch (err) {
-    console.log(err);
-    res.status(500).json({ message: "Failed to delete post" });
+    console.error(err);
+    return res.status(500).json({ message: "Failed to delete post" });
   }
 };
