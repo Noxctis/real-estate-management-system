@@ -1,3 +1,4 @@
+//File : apps/client/src/routes/singlePage/singlePage.jsx
 import "./singlePage.scss";
 import Slider from "../../components/slider/Slider";
 import Map from "../../components/map/Map";

@@ -1,3 +1,4 @@
+// File: apps/client/app.jsx
 import HomePage from "./routes/homePage/homePage";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import ListPage from "./routes/listPage/listPage";

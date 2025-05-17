@@ -1,3 +1,4 @@
+// File: apps/socket/app.js
 import { Server } from "socket.io";
 
 const io = new Server({

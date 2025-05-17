@@ -1,3 +1,4 @@
+// File : apps/client/src/components/chat/Chat.jsx
 import { useContext, useEffect, useRef, useState } from "react";
 import "./chat.scss";
 import { AuthContext } from "../../context/AuthContext";
