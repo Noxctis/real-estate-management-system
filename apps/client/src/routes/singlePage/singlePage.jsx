@@ -28,6 +28,23 @@ function SinglePage() {
     }
   };
 
+  const handleMessagePoster = async () => {
+    if (!currentUser) {
+      navigate("/login");
+      return;
+    }
+    try {
+      // 1. Create or get chat with post owner
+      const res = await apiRequest.post("/chats", {
+        receiverId: post.userId || post.user.id,
+      });
+      // 2. Redirect to chat page or open chat UI (if you have a chat route/component)
+      navigate("/profile?chatId=" + res.data.id);
+    } catch (err) {
+      alert("Failed to start chat with the post owner.");
+    }
+  };
+
   return (
     <div className="singlePage">
       <div className="details">
@@ -140,7 +157,7 @@ function SinglePage() {
             <Map items={[post]} />
           </div>
           <div className="buttons">
-            <button>
+            <button onClick={handleMessagePoster}>
               <img src="/chat.png" alt="" />
               Send a Message
             </button>
