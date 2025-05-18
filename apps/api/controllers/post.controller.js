@@ -2,6 +2,7 @@
 
 import prisma from "../lib/prisma.js";
 import jwt from "jsonwebtoken";
+import axios from "axios";
 
 export const getPosts = async (req, res) => {
   const query = req.query;
@@ -29,6 +30,11 @@ export const getPosts = async (req, res) => {
 
 export const getPost = async (req, res) => {
   const { id } = req.params;
+
+  // Validate MongoDB ObjectId (24 hex chars)
+  if (!id || typeof id !== "string" || id.length !== 24 || !/^[a-fA-F0-9]{24}$/.test(id)) {
+    return res.status(400).json({ message: "Invalid post ID format." });
+  }
 
   try {
     // 1. Fetch the post with its details and author info
@@ -84,12 +90,15 @@ export const addPost = async (req, res) => {
   const tokenUserId = req.userId;
 
   try {
+    // Remove likePost from postDetail if present
+    const postDetail = { ...body.postDetail };
+    if ('likePost' in postDetail) delete postDetail.likePost;
     const newPost = await prisma.post.create({
       data: {
         ...body.postData,
         userId: tokenUserId,
         postDetail: {
-          create: body.postDetail,
+          create: postDetail,
         },
       },
     });
@@ -146,5 +155,25 @@ export const searchPosts = async (req, res) => {
     res.status(200).json(posts);
   } catch (err) {
     res.status(500).json({ message: "Failed to search posts!" });
+  }
+};
+
+export const marketAnalysis = async (req, res) => {
+  const { address } = req.query;
+  if (!address) return res.status(400).json({ message: "Address required" });
+  try {
+    // Geocode address to get city (or lat/lng for more advanced search)
+    // For now, just use city substring match
+    // Optionally, you can use Google Maps API here for more precise geocoding
+    const posts = await prisma.post.findMany({
+      where: {
+        address: { contains: address, mode: "insensitive" }
+      }
+    });
+    if (!posts.length) return res.json({ count: 0, avgPrice: 0 });
+    const avgPrice = posts.reduce((sum, p) => sum + (p.price || 0), 0) / posts.length;
+    res.json({ count: posts.length, avgPrice, posts });
+  } catch (err) {
+    res.status(500).json({ message: "Failed to get market analysis" });
   }
 };

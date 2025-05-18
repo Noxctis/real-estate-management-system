@@ -10,8 +10,14 @@ function NewPostPage() {
   const [value, setValue] = useState("");
   const [images, setImages] = useState([]);
   const [error, setError] = useState("");
+  const [latLng, setLatLng] = useState({ latitude: "", longitude: "" });
+  const [address, setAddress] = useState("");
 
-  const navigate = useNavigate()
+  const navigate = useNavigate();
+
+  const handleAddressChange = (e) => {
+    setAddress(e.target.value);
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -42,10 +48,9 @@ function NewPostPage() {
           school: parseInt(inputs.school),
           bus: parseInt(inputs.bus),
           restaurant: parseInt(inputs.restaurant),
-          likePost: inputs.likePost,
         },
       });
-      navigate("/"+res.data.id)
+      navigate("/" + res.data.id);
     } catch (err) {
       console.log(err);
       setError(error);
@@ -59,60 +64,125 @@ function NewPostPage() {
         <div className="wrapper">
           <form onSubmit={handleSubmit}>
             <div className="item">
-              <label htmlFor="title">Title<span style={{color:'red'}}>*</span></label>
+              <label htmlFor="title">
+                Title<span style={{ color: "red" }}>*</span>
+              </label>
               <input id="title" name="title" type="text" required />
             </div>
             <div className="item">
-              <label htmlFor="price">Price<span style={{color:'red'}}>*</span></label>
+              <label htmlFor="price">
+                Price<span style={{ color: "red" }}>*</span>
+              </label>
               <input id="price" name="price" type="number" required min={0} />
             </div>
             <div className="item">
-              <label htmlFor="address">Address<span style={{color:'red'}}>*</span></label>
-              <input id="address" name="address" type="text" required />
+              <label htmlFor="address">
+                Address<span style={{ color: "red" }}>*</span>
+              </label>
+              <input
+                id="address"
+                name="address"
+                type="text"
+                value={address}
+                onChange={handleAddressChange}
+                required
+              />
+            </div>
+            <div className="item">
+              <label htmlFor="latitude">
+                Latitude{" "}
+                <span style={{ color: "gray", fontWeight: 400 }}>
+                  (e.g. 14.5995)
+                </span>
+              </label>
+              <input
+                id="latitude"
+                name="latitude"
+                type="number"
+                step="any"
+                value={latLng.latitude}
+                onChange={(e) =>
+                  setLatLng((l) => ({ ...l, latitude: e.target.value }))
+                }
+                required
+              />
+              <small style={{ color: "#888" }}>
+                Latitude is the north-south position (decimal degrees, -90 to
+                90).
+              </small>
+            </div>
+            <div className="item">
+              <label htmlFor="longitude">
+                Longitude{" "}
+                <span style={{ color: "gray", fontWeight: 400 }}>
+                  (e.g. 120.9842)
+                </span>
+              </label>
+              <input
+                id="longitude"
+                name="longitude"
+                type="number"
+                step="any"
+                value={latLng.longitude}
+                onChange={(e) =>
+                  setLatLng((l) => ({ ...l, longitude: e.target.value }))
+                }
+                required
+              />
+              <small style={{ color: "#888" }}>
+                Longitude is the east-west position (decimal degrees, -180 to
+                180).
+              </small>
             </div>
             <div className="item description">
-              <label htmlFor="desc">Description<span style={{color:'red'}}>*</span></label>
+              <label htmlFor="desc">
+                Description<span style={{ color: "red" }}>*</span>
+              </label>
               <ReactQuill theme="snow" onChange={setValue} value={value} />
             </div>
             <div className="item">
-              <label htmlFor="city">City<span style={{color:'red'}}>*</span></label>
+              <label htmlFor="city">
+                City<span style={{ color: "red" }}>*</span>
+              </label>
               <input id="city" name="city" type="text" required />
             </div>
             <div className="item">
-              <label htmlFor="bedroom">Bedroom Number<span style={{color:'red'}}>*</span></label>
+              <label htmlFor="bedroom">
+                Bedroom Number<span style={{ color: "red" }}>*</span>
+              </label>
               <input min={1} id="bedroom" name="bedroom" type="number" required />
             </div>
             <div className="item">
-              <label htmlFor="bathroom">Bathroom Number<span style={{color:'red'}}>*</span></label>
+              <label htmlFor="bathroom">
+                Bathroom Number<span style={{ color: "red" }}>*</span>
+              </label>
               <input min={1} id="bathroom" name="bathroom" type="number" required />
             </div>
             <div className="item">
-              <label htmlFor="latitude">Latitude <span style={{color:'gray', fontWeight:400}}>(e.g. 14.5995)</span></label>
-              <input id="latitude" name="latitude" type="number" step="any" placeholder="Enter latitude (e.g. 14.5995)" />
-              <small style={{color:'#888'}}>Latitude is the north-south position (decimal degrees, -90 to 90).</small>
-            </div>
-            <div className="item">
-              <label htmlFor="longitude">Longitude <span style={{color:'gray', fontWeight:400}}>(e.g. 120.9842)</span></label>
-              <input id="longitude" name="longitude" type="number" step="any" placeholder="Enter longitude (e.g. 120.9842)" />
-              <small style={{color:'#888'}}>Longitude is the east-west position (decimal degrees, -180 to 180).</small>
-            </div>
-            <div className="item">
-              <label htmlFor="type">Type<span style={{color:'red'}}>*</span></label>
+              <label htmlFor="type">
+                Type<span style={{ color: "red" }}>*</span>
+              </label>
               <select name="type" required>
                 <option value="rent">Rent (for lease/rent)</option>
                 <option value="buy">Buy (for sale)</option>
               </select>
-              <small style={{color:'#888'}}>Choose whether this property is for rent or for sale.</small>
+              <small style={{ color: "#888" }}>
+                Choose whether this property is for rent or for sale.
+              </small>
             </div>
             <div className="item">
-              <label htmlFor="property">Property<span style={{color:'red'}}>*</span></label>
+              <label htmlFor="property">
+                Property<span style={{ color: "red" }}>*</span>
+              </label>
               <select name="property" required>
                 <option value="apartment">Apartment</option>
                 <option value="house">House</option>
                 <option value="condo">Condo</option>
                 <option value="land">Land</option>
               </select>
-              <small style={{color:'#888'}}>Select the type of property you are posting.</small>
+              <small style={{ color: "#888" }}>
+                Select the type of property you are posting.
+              </small>
             </div>
 
             <div className="item">
@@ -154,15 +224,6 @@ function NewPostPage() {
             <div className="item">
               <label htmlFor="restaurant">Restaurant</label>
               <input min={0} id="restaurant" name="restaurant" type="number" />
-            </div>
-            <div className="item">
-              <label htmlFor="likePost">Do you like this post? <span style={{color:'red'}}>*</span></label>
-              <select id="likePost" name="likePost" required>
-                <option value="">Select an option</option>
-                <option value="yes">Yes</option>
-                <option value="no">No</option>
-              </select>
-              <small style={{color:'#888'}}>Let us know if you personally like this post (for feedback purposes).</small>
             </div>
             <button className="sendButton">Add</button>
             {error && <span>error</span>}

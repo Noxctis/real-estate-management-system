@@ -3,6 +3,7 @@ import { useContext, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { AuthContext } from "../../context/AuthContext";
 import apiRequest from "../../lib/apiRequest";
+import MarketAnalysis from "./MarketAnalysis";
 import "./card.scss";
 
 function Card({ item }) {
@@ -58,6 +59,7 @@ function Card({ item }) {
           <span>{item.address}</span>
         </p>
         <p className="price">$ {item.price}</p>
+        <MarketAnalysis address={item.address} />
         <div className="bottom">
           <div className="features">
             <div className="feature">
