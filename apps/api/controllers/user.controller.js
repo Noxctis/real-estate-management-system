@@ -82,6 +82,7 @@ export const savePost = async (req, res) => {
   const tokenUserId = req.userId;
 
   try {
+    // Use composite unique key for lookup
     const savedPost = await prisma.savedPost.findUnique({
       where: {
         userId_postId: {
@@ -92,13 +93,18 @@ export const savePost = async (req, res) => {
     });
 
     if (savedPost) {
+      // If already saved, remove (toggle off)
       await prisma.savedPost.delete({
         where: {
-          id: savedPost.id,
+          userId_postId: {
+            userId: tokenUserId,
+            postId,
+          },
         },
       });
       res.status(200).json({ message: "Post removed from saved list" });
     } else {
+      // Only create if not already saved
       await prisma.savedPost.create({
         data: {
           userId: tokenUserId,
@@ -108,8 +114,12 @@ export const savePost = async (req, res) => {
       res.status(200).json({ message: "Post saved" });
     }
   } catch (err) {
+    if (err.code === 'P2002') {
+      // Unique constraint error: already saved
+      return res.status(400).json({ message: "You have already saved this post." });
+    }
     console.log(err);
-    res.status(500).json({ message: "Failed to delete users!" });
+    res.status(500).json({ message: "Failed to save post!" });
   }
 };
 
