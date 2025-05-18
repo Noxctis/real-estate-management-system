@@ -13,7 +13,13 @@ const MarketAnalysis = ({ address }) => {
     setError(null);
     apiRequest.get(`/posts/market-analysis?address=${encodeURIComponent(address)}`)
       .then(res => setStats(res.data))
-      .catch(() => setError("Failed to load market analysis"))
+      .catch((err) => {
+        if (err.response && err.response.data && err.response.data.message) {
+          setError("Market analysis error: " + err.response.data.message);
+        } else {
+          setError("Failed to load market analysis: " + (err.message || "Unknown error"));
+        }
+      })
       .finally(() => setLoading(false));
   }, [address]);
 

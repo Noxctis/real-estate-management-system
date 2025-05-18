@@ -160,7 +160,9 @@ export const searchPosts = async (req, res) => {
 
 export const marketAnalysis = async (req, res) => {
   const { address } = req.query;
-  if (!address) return res.status(400).json({ message: "Address required" });
+  if (!address || typeof address !== "string" || address.trim().length < 3) {
+    return res.status(400).json({ message: "Address required (min 3 characters)" });
+  }
   try {
     // Geocode address to get city (or lat/lng for more advanced search)
     // For now, just use city substring match
