@@ -32,6 +32,7 @@ model Post {
   userId     String      @db.ObjectId
   postDetail PostDetail?
   savedPosts SavedPost[]
+  leases     Lease[]
 }
 
 enum Type {
@@ -82,6 +83,7 @@ model User {
   savedPosts SavedPost[]
   chats      Chat[]      @relation(fields: [chatIDs], references: [id])
   chatIDs    String[]    @db.ObjectId
+  leases     Lease[]     @relation("UserLeases")
 }
 
 model Chat {
@@ -100,5 +102,30 @@ model Message {
   userId    String
   chat      Chat     @relation(fields: [chatId], references: [id])
   chatId    String   @db.ObjectId
+  createdAt DateTime @default(now())
+}
+
+model Lease {
+  id          String   @id @default(auto()) @map("_id") @db.ObjectId
+  property    Post     @relation(fields: [propertyId], references: [id])
+  propertyId  String   @db.ObjectId
+  tenant      User     @relation("UserLeases", fields: [tenantId], references: [id])
+  tenantId    String   @db.ObjectId
+  startDate   DateTime
+  endDate     DateTime
+  rentAmount  Float
+  status      String   // e.g. "active", "terminated"
+  payments    Payment[]
+  createdAt   DateTime @default(now())
+}
+
+model Payment {
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  lease     Lease    @relation(fields: [leaseId], references: [id])
+  leaseId   String   @db.ObjectId
+  amount    Float
+  dueDate   DateTime
+  paidDate  DateTime?
+  status    String   // e.g. "pending", "paid", "late"
   createdAt DateTime @default(now())
 }

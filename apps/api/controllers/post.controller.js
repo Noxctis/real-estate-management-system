@@ -130,3 +130,21 @@ export const deletePost = async (req, res) => {
     return res.status(500).json({ message: "Failed to delete post" });
   }
 };
+
+export const searchPosts = async (req, res) => {
+  const { q } = req.query;
+  try {
+    const posts = await prisma.post.findMany({
+      where: {
+        OR: [
+          { title: { contains: q, mode: "insensitive" } },
+          { address: { contains: q, mode: "insensitive" } }
+        ]
+      },
+      select: { id: true, title: true, address: true }
+    });
+    res.status(200).json(posts);
+  } catch (err) {
+    res.status(500).json({ message: "Failed to search posts!" });
+  }
+};

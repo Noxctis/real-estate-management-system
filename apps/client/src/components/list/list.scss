@@ -3,3 +3,77 @@
   flex-direction: column;
   gap: 50px;
 }
+
+.lease-list, .payment-list {
+  margin: 24px 0;
+  background: #fff;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+  padding: 20px;
+}
+.lease-list h2, .payment-list h2 {
+  margin-bottom: 12px;
+}
+.lease-list ul, .payment-list ul {
+  list-style: none;
+  padding: 0;
+}
+.lease-list li, .payment-list li {
+  margin-bottom: 16px;
+  border: 1px solid #eaeaea;
+  border-radius: 6px;
+  padding: 12px;
+  background: #fafbfc;
+  transition: box-shadow 0.2s;
+}
+.lease-list li:hover, .payment-list li:hover {
+  box-shadow: 0 2px 8px rgba(0,0,0,0.07);
+}
+.lease-list button, .payment-list button {
+  margin-top: 8px;
+  margin-right: 8px;
+  padding: 4px 12px;
+  border: none;
+  border-radius: 4px;
+  background: #007bff;
+  color: #fff;
+  cursor: pointer;
+  font-size: 0.95em;
+  transition: background 0.2s;
+}
+.lease-list button:hover, .payment-list button:hover {
+  background: #0056b3;
+}
+.modal-bg {
+  position: fixed;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: rgba(0,0,0,0.2);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+.modal {
+  background: #fff;
+  padding: 32px 24px;
+  border-radius: 8px;
+  min-width: 320px;
+  box-shadow: 0 4px 24px rgba(0,0,0,0.12);
+}
+.lease-form, .payment-form {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.lease-form input, .payment-form input, .payment-form select {
+  padding: 6px 8px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+.lease-form label, .payment-form label {
+  font-weight: 500;
+}
+.error {
+  color: #c00;
+  margin-top: 6px;
+}

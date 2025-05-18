@@ -1,6 +1,8 @@
 // File : apps/client/src/routes/profilePage/profilePage.jsx
 import Chat from "../../components/chat/Chat";
 import List from "../../components/list/List";
+import LeaseList from "../../components/list/LeaseList";
+import PaymentList from "../../components/list/PaymentList";
 import "./profilePage.scss";
 import apiRequest from "../../lib/apiRequest";
 import { Await, Link, useLoaderData, useNavigate } from "react-router-dom";
@@ -71,6 +73,14 @@ function ProfilePage() {
               {(postResponse) => <List posts={postResponse.data.savedPosts} />}
             </Await>
           </Suspense>
+          <div className="title">
+            <h1>Leases</h1>
+          </div>
+          <LeaseList />
+          <div className="title">
+            <h1>Payments</h1>
+          </div>
+          <PaymentList />
         </div>
       </div>
       <div className="chatContainer">
@@ -80,7 +90,7 @@ function ProfilePage() {
               resolve={data.chatResponse}
               errorElement={<p>Error loading chats!</p>}
             >
-              {(chatResponse) => <Chat chats={chatResponse.data}/>}
+              {(chatResponse) => <Chat chats={chatResponse.data} />}
             </Await>
           </Suspense>
         </div>

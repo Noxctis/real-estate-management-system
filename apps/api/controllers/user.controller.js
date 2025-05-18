@@ -165,3 +165,21 @@ export const getNotificationNumber = async (req, res) => {
     res.status(500).json({ message: "Failed to get profile posts!" });
   }
 };
+
+export const searchUsers = async (req, res) => {
+  const { q } = req.query;
+  try {
+    const users = await prisma.user.findMany({
+      where: {
+        OR: [
+          { username: { contains: q, mode: "insensitive" } },
+          { email: { contains: q, mode: "insensitive" } }
+        ]
+      },
+      select: { id: true, username: true, email: true, avatar: true }
+    });
+    res.status(200).json(users);
+  } catch (err) {
+    res.status(500).json({ message: "Failed to search users!" });
+  }
+};
