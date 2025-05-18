@@ -13,7 +13,7 @@ import { listPageLoader, profilePageLoader, singlePageLoader } from "./lib/loade
 import About from "./routes/aboutPage/aboutPage";
 import ContactPage from "./routes/contactPage/contactPage";
 import AgentsPage from "./routes/agentsPage/agentsPage";
-
+import AdminDashboard from "./routes/adminDashboard/AdminDashboard";
 
 function App() {
   const router = createBrowserRouter([
@@ -55,6 +55,10 @@ function App() {
         {
           path: "/agents",
           element: <AgentsPage />,
+        },
+        {
+          path: "/admin",
+          element: <AdminDashboard />,
         },
       ],
     },

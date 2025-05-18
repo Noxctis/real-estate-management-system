@@ -1,0 +1,35 @@
+.admin-dashboard {
+  max-width: 900px;
+  margin: 40px auto;
+  background: #fff;
+  border-radius: 10px;
+  box-shadow: 0 2px 12px rgba(0,0,0,0.07);
+  padding: 32px 28px;
+}
+.admin-dashboard h1 {
+  margin-bottom: 24px;
+  font-size: 2.2em;
+}
+.summary {
+  display: flex;
+  gap: 32px;
+  margin-bottom: 32px;
+  font-size: 1.1em;
+}
+.admin-dashboard table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-bottom: 32px;
+}
+.admin-dashboard th, .admin-dashboard td {
+  border: 1px solid #eaeaea;
+  padding: 10px 8px;
+  text-align: left;
+}
+.admin-dashboard th {
+  background: #f5f7fa;
+  font-weight: 600;
+}
+.admin-dashboard tr:nth-child(even) {
+  background: #fafbfc;
+}
