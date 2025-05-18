@@ -35,6 +35,26 @@
         }
       }
 
+      .show-password-btn {
+        align-self: flex-end;
+        margin-top: -38px;
+        margin-bottom: 10px;
+        background: none;
+        border: none;
+        color: #00796b;
+        cursor: pointer;
+        font-size: 1.2em;
+        padding: 0;
+        display: flex;
+        align-items: center;
+        gap: 4px;
+        svg {
+          width: 1.2em;
+          height: 1.2em;
+          vertical-align: middle;
+        }
+      }
+
       span{
         color: rgba(255, 0, 0, 0.591);
       }
