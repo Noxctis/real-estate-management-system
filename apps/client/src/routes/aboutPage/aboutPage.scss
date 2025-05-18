@@ -1,6 +1,6 @@
 @import "../../responsive.scss";
 
-.homePage {
+.aboutPage {
   display: flex;
   height: 100%;
 
@@ -28,7 +28,10 @@
       }
 
       .title {
-        font-size: 64px;
+        font-size: 74px;
+        color: #2c3e50;
+
+
 
         @include lg {
           font-size: 48px;
@@ -45,6 +48,7 @@
 
         h1 {
           font-size: 36px;
+            color: #0052a4;
 
           @include lg {
             font-size: 32px;
@@ -87,7 +91,5 @@
       width: 80px;
       z-index: 2;
     }
-
-  
   }
 }
