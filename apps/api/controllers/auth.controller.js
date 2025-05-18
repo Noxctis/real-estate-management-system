@@ -3,16 +3,38 @@ import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 import prisma from "../lib/prisma.js";
 
+function validateEmail(email) {
+  // Simple email regex
+  return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+}
+
+function validateUsername(username) {
+  // 3-20 chars, alphanumeric and underscore
+  return /^[a-zA-Z0-9_]{3,20}$/.test(username);
+}
+
+function validatePassword(password) {
+  // At least 8 chars, at least one letter, one number, and one special character
+  return /^(?=.*[A-Za-z])(?=.*\d)(?=.*[^A-Za-z0-9]).{8,}$/.test(password);
+}
+
 export const register = async (req, res) => {
   const { username, email, password } = req.body;
 
+  // Validation
+  if (!validateUsername(username)) {
+    return res.status(400).json({ message: "Invalid username. Use 3-20 letters, numbers, or underscores." });
+  }
+  if (!validateEmail(email)) {
+    return res.status(400).json({ message: "Invalid email address." });
+  }
+  if (!validatePassword(password)) {
+    return res.status(400).json({ message: "Password must be at least 8 characters, include at least one letter, one number, and one special character." });
+  }
+
   try {
     // HASH THE PASSWORD
-
     const hashedPassword = await bcrypt.hash(password, 10);
-
-    console.log(hashedPassword);
-
     // CREATE A NEW USER AND SAVE TO DB
     const newUser = await prisma.user.create({
       data: {
@@ -21,12 +43,18 @@ export const register = async (req, res) => {
         password: hashedPassword,
       },
     });
-
-    console.log(newUser);
-
     res.status(201).json({ message: "User created successfully" });
   } catch (err) {
-    console.log(err);
+    // Handle duplicate username/email error
+    if (err.code === 'P2002' && err.meta && err.meta.target) {
+      if (err.meta.target.includes('username')) {
+        return res.status(400).json({ message: "Username already exists." });
+      }
+      if (err.meta.target.includes('email')) {
+        return res.status(400).json({ message: "Email already exists." });
+      }
+    }
+    // Generic error
     res.status(500).json({ message: "Failed to create user!" });
   }
 };

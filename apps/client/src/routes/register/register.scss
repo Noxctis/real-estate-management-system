@@ -35,6 +35,18 @@
         }
       }
 
+      .show-password-btn {
+        align-self: flex-end;
+        margin-top: -38px;
+        margin-bottom: 10px;
+        background: none;
+        border: none;
+        color: #00796b;
+        cursor: pointer;
+        font-size: 0.95em;
+        padding: 0;
+      }
+
       span {
         color: rgba(255, 0, 0, 0.591);
       }
@@ -58,4 +70,41 @@
       width: 100%;
     }
   }
+}
+
+.password-strength {
+  font-size: 0.95em;
+  margin-bottom: 10px;
+  div {
+    margin-bottom: 2px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .progress-bar {
+    margin-top: 5px;
+    border-radius: 4px;
+    transition: width 0.3s;
+    height: 8px;
+    background: linear-gradient(90deg, #4caf50, #ffeb3b, #f44336);
+  }
+  .valid {
+    color: green;
+    span {
+      color: green;
+    }
+  }
+  .invalid {
+    color: gray;
+    span {
+      color: gray;
+    }
+  }
+}
+
+.error-message {
+  color: #d32f2f;
+  font-size: 0.95em;
+  margin-top: 4px;
+  display: block;
 }
