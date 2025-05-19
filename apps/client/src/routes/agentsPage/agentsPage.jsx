@@ -13,22 +13,22 @@ function AgentsPage() {
           </p>
           <div className="agentsList">
             <div className="agentCard">
-              <img src="/noavatar.jpg" alt="Agent" />
-              <h2>Jane Doe</h2>
-              <p>Senior Agent - 10+ years experience</p>
-              <span>Email: jane@carolestates.com</span>
+              <img src="/agent1.jpg" alt="Agent" />
+              <h2>Sid Andre P. Bordario</h2>
+              <p>Senior Citizen - 10+ years experience</p>
+              <span>Email: 23101361@usc.edu.ph Phone #123456789</span>
             </div>
             <div className="agentCard">
-              <img src="/noavatar.jpg" alt="Agent" />
-              <h2>John Smith</h2>
+              <img src="/agent2.jpg" alt="Agent" />
+              <h2>Cyril John Christian A. Calo</h2>
               <p>Property Specialist - 8+ years experience</p>
-              <span>Email: john@carolestates.com</span>
+              <span>Email: 2310118@usc.edu.ph Phone #123456789</span>
             </div>
             <div className="agentCard">
-              <img src="/noavatar.jpg" alt="Agent" />
-              <h2>Emily Clark</h2>
+              <img src="/agent3.jpg" alt="Agent" />
+              <h2>Chrys Sean T. Sevilla</h2>
               <p>Rental Expert - 5+ years experience</p>
-              <span>Email: emily@carolestates.com</span>
+              <span>Email: 21101819@usc.edu.ph</span>
             </div>
           </div>
         </div>

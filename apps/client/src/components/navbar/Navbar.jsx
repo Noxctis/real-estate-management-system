@@ -19,7 +19,7 @@ function Navbar() {
       <div className="left">
         <a href="/" className="logo">
           <img src="/logo.png" alt="" />
-          <span>CarolEstateS</span>
+          <span>CarolEstates</span>
         </a>
         <a href="/">Home</a>
         <Link to="/about">About</Link>

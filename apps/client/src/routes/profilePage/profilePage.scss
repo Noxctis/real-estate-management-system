@@ -36,7 +36,7 @@
 
         button{
           padding: 12px 24px;
-          background-color: #fece51;
+          background-color: #d9fdfb;
           cursor: pointer;
           border: none;
         }
@@ -55,7 +55,7 @@
 
         button{
           width: 100px;
-          background-color: teal;
+          background-color: #ff6b6b;
           border: none;
           color: white;
           padding: 10px 20px;
@@ -74,7 +74,7 @@
   }
   .chatContainer {
     flex: 2;
-    background-color: #fcf5f3;
+    background-color: #f0ffff;
     height: 100%;
 
     @include md{
