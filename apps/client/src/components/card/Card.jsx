@@ -45,6 +45,23 @@ function Card({ item }) {
     }
   };
 
+  const handleDelete = async (e) => {
+    e.stopPropagation();
+    e.preventDefault();
+    if (!currentUser || !isOwner) return;
+    if (!window.confirm("Are you sure you want to delete this post?")) return;
+    setLoading(true);
+    try {
+      await apiRequest.delete(`/posts/${item.id}`);
+      // Optionally: trigger parent to refresh list or remove this card from UI
+      window.location.reload(); // Simple approach, or lift state up for better UX
+    } catch (err) {
+      alert("Failed to delete post.");
+    } finally {
+      setLoading(false);
+    }
+  };
+
   return (
     <div className="card">
       <Link to={`/${item.id}`} className="imageContainer">
@@ -92,6 +109,27 @@ function Card({ item }) {
             >
               <img src="/chat.png" alt="chat" />
             </div>
+            {/* Owner-only Edit/Delete */}
+            {isOwner && (
+              <>
+                <div
+                  className="icon"
+                  title="Edit Post"
+                  onClick={() => navigate(`/edit/${item.id}`)}
+                  style={{ cursor: "pointer" }}
+                >
+                  <img src="/edit.png" alt="edit" />
+                </div>
+                <div
+                  className="icon"
+                  title="Delete Post"
+                  onClick={handleDelete}
+                  style={{ cursor: loading ? "not-allowed" : "pointer", opacity: loading ? 0.5 : 1 }}
+                >
+                  <img src="/delete.png" alt="delete" />
+                </div>
+              </>
+            )}
           </div>
         </div>
       </div>

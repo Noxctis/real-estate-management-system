@@ -14,6 +14,7 @@ import About from "./routes/aboutPage/aboutPage";
 import ContactPage from "./routes/contactPage/contactPage";
 import AgentsPage from "./routes/agentsPage/agentsPage";
 import AdminDashboard from "./routes/adminDashboard/AdminDashboard";
+import EditPostPage from "./routes/editPostPage/editPostPage";
 
 function App() {
   const router = createBrowserRouter([
@@ -35,7 +36,10 @@ function App() {
           element: <SinglePage />,
           loader: singlePageLoader,
         },
-
+        {
+          path: "/edit/:id",
+          element: <EditPostPage />,
+        },
         {
           path: "/login",
           element: <Login />,

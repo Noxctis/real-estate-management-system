@@ -4,7 +4,7 @@ import Slider from "../../components/slider/Slider";
 import Map from "../../components/map/Map";
 import { useNavigate, useLoaderData } from "react-router-dom";
 import DOMPurify from "dompurify";
-import { useContext, useState } from "react";
+import { useContext, useState, useEffect } from "react";
 import { AuthContext } from "../../context/AuthContext";
 import apiRequest from "../../lib/apiRequest";
 
@@ -14,11 +14,14 @@ function SinglePage() {
   const { currentUser } = useContext(AuthContext);
   const navigate = useNavigate();
 
+  const isOwner = currentUser && (currentUser.id === post.userId || currentUser.id === post.user?.id);
+  const [editMode, setEditMode] = useState(false);
+  const [loading, setLoading] = useState(false);
+
   const handleSave = async () => {
     if (!currentUser) {
       navigate("/login");
     }
-    // AFTER REACT 19 UPDATE TO USEOPTIMISTIK HOOK
     setSaved((prev) => !prev);
     try {
       await apiRequest.post("/users/save", { postId: post.id });
@@ -34,15 +37,31 @@ function SinglePage() {
       return;
     }
     try {
-      // 1. Create or get chat with post owner
       const res = await apiRequest.post("/chats", {
         receiverId: post.userId || post.user.id,
       });
-      // 2. Redirect to chat page or open chat UI (if you have a chat route/component)
       navigate("/profile?chatId=" + res.data.id);
     } catch (err) {
       alert("Failed to start chat with the post owner.");
     }
+  };
+
+  const handleDelete = async () => {
+    if (!currentUser || !isOwner) return;
+    if (!window.confirm("Are you sure you want to delete this post?")) return;
+    setLoading(true);
+    try {
+      await apiRequest.delete(`/posts/${post.id}`);
+      navigate("/profile?tab=my-posts");
+    } catch (err) {
+      alert("Failed to delete post.");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleEdit = () => {
+    navigate(`/edit/${post.id}`);
   };
 
   return (
@@ -170,6 +189,16 @@ function SinglePage() {
               <img src="/save.png" alt="" />
               {saved ? "Place Saved" : "Save the Place"}
             </button>
+            {isOwner && (
+              <>
+                <button onClick={handleEdit} disabled={loading}>
+                  <img src="/edit.png" alt="edit" /> Edit
+                </button>
+                <button onClick={handleDelete} disabled={loading} style={{ background: '#f66', color: '#fff' }}>
+                  <img src="/delete.png" alt="delete" /> Delete
+                </button>
+              </>
+            )}
           </div>
         </div>
       </div>

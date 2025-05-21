@@ -13,7 +13,17 @@ export const createPayment = async (req, res) => {
 
 export const getPayments = async (req, res) => {
   try {
-    const payments = await prisma.payment.findMany({ include: { lease: true } });
+    // Include lease, and for lease include property and tenant
+    const payments = await prisma.payment.findMany({
+      include: {
+        lease: {
+          include: {
+            property: true,
+            tenant: true,
+          },
+        },
+      },
+    });
     res.status(200).json(payments);
   } catch (err) {
     res.status(500).json({ message: "Failed to fetch payments." });
@@ -24,7 +34,14 @@ export const getPayment = async (req, res) => {
   try {
     const payment = await prisma.payment.findUnique({
       where: { id: req.params.id },
-      include: { lease: true },
+      include: {
+        lease: {
+          include: {
+            property: true,
+            tenant: true,
+          },
+        },
+      },
     });
     if (!payment) return res.status(404).json({ message: "Payment not found." });
     res.status(200).json(payment);

@@ -3,6 +3,7 @@ import React, { useState } from "react";
 import apiRequest from "../../lib/apiRequest";
 
 const PaymentForm = ({ onSuccess, payment, leaseId }) => {
+  // This form allows you to create or edit a payment for a lease. Instead of showing only lease IDs, you can search by property name and tenant username for more context.
   const [form, setForm] = useState({
     leaseId: leaseId || payment?.leaseId || "",
     amount: payment?.amount || "",
@@ -61,6 +62,9 @@ const PaymentForm = ({ onSuccess, payment, leaseId }) => {
   return (
     <form className="payment-form" onSubmit={handleSubmit}>
       <h3>{payment ? "Edit Payment" : "New Payment"}</h3>
+      <p style={{fontSize: "0.97em", color: "#666", marginBottom: 10}}>
+        {payment ? "Update payment details for this lease." : "Create a new payment for a lease. Search by property name and tenant username for context."}
+      </p>
       {!leaseId && (
         <>
           <label>Lease</label>
@@ -74,7 +78,9 @@ const PaymentForm = ({ onSuccess, payment, leaseId }) => {
           <select name="leaseId" value={form.leaseId} onChange={handleSelectLease} required>
             <option value="">Select lease...</option>
             {leaseOptions.map((l) => (
-              <option key={l.id} value={l.id}>{l.propertyId} - {l.tenantId}</option>
+              <option key={l.id} value={l.id}>
+                {l.propertyTitle || l.propertyId} ({l.propertyAddress || l.propertyId}) - {l.tenantUsername || l.tenantId}
+              </option>
             ))}
           </select>
         </>

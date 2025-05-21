@@ -14,8 +14,15 @@ const LeaseList = () => {
     setLoading(true);
     setError(null);
     try {
+      // Fetch leases with property and tenant info populated
       const res = await apiRequest.get("/leases");
-      setLeases(res.data);
+      // Map leases to include property and tenant info for display
+      const leasesWithInfo = res.data.map(lease => ({
+        ...lease,
+        propertyDisplay: lease.property?.title || lease.propertyTitle || lease.propertyId,
+        tenantDisplay: lease.tenant?.username || lease.tenantUsername || lease.tenantId,
+      }));
+      setLeases(leasesWithInfo);
     } catch (err) {
       setError("Failed to load leases");
     } finally {
@@ -71,8 +78,8 @@ const LeaseList = () => {
         <ul>
           {leases.map((lease) => (
             <li key={lease.id} style={{marginBottom: 12, border: "1px solid #eee", padding: 8, borderRadius: 6}}>
-              <strong>Property:</strong> {lease.propertyAddress || lease.propertyId}<br />
-              <strong>Tenant:</strong> {lease.tenantName || lease.tenantId}<br />
+              <strong>Property:</strong> {lease.propertyDisplay}<br />
+              <strong>Tenant:</strong> {lease.tenantDisplay}<br />
               <strong>Start:</strong> {lease.startDate}<br />
               <strong>End:</strong> {lease.endDate}<br />
               <strong>Rent:</strong> ${lease.rentAmount}<br />

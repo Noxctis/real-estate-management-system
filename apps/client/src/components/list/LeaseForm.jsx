@@ -3,6 +3,8 @@ import React, { useState } from "react";
 import apiRequest from "../../lib/apiRequest";
 
 const LeaseForm = ({ onSuccess, lease }) => {
+  // This form allows you to create or edit a lease agreement between a tenant (by username) and a property (by name/address).
+  // Instead of showing only IDs, users can search and select by username and property name for better context.
   const [form, setForm] = useState({
     propertyId: lease?.propertyId || "",
     tenantId: lease?.tenantId || "",
@@ -79,10 +81,13 @@ const LeaseForm = ({ onSuccess, lease }) => {
   return (
     <form className="lease-form" onSubmit={handleSubmit}>
       <h3>{lease ? "Edit Lease" : "New Lease"}</h3>
+      <p style={{fontSize: "0.97em", color: "#666", marginBottom: 10}}>
+        {lease ? "Update details for this lease agreement." : "Create a new lease agreement between a tenant and a property. Search by username and property name for context."}
+      </p>
       <label>Property</label>
       <input
         type="text"
-        placeholder="Search property by title or address..."
+        placeholder="Search property by name or address..."
         value={propertySearch}
         onChange={handlePropertySearch}
         autoComplete="off"
@@ -90,7 +95,11 @@ const LeaseForm = ({ onSuccess, lease }) => {
       <select name="propertyId" value={form.propertyId} onChange={handleSelectProperty} required>
         <option value="">Select property...</option>
         {propertyOptions.map((p) => (
-          <option key={p.id} value={p.id}>{p.title} ({p.address})</option>
+          <option key={p.id} value={p.id}>
+            {p.title ? `${p.title}` : p.address ? p.address : p.id}
+            {p.address && p.title ? ` (${p.address})` : p.address && !p.title ? ` (${p.address})` : ""}
+            {p.ownerUsername ? ` - Owner: ${p.ownerUsername}` : ""}
+          </option>
         ))}
       </select>
       <label>Tenant</label>
@@ -104,7 +113,9 @@ const LeaseForm = ({ onSuccess, lease }) => {
       <select name="tenantId" value={form.tenantId} onChange={handleSelectUser} required>
         <option value="">Select user...</option>
         {userOptions.map((u) => (
-          <option key={u.id} value={u.id}>{u.username} ({u.email})</option>
+          <option key={u.id} value={u.id}>
+            {u.username} {u.email ? `(${u.email})` : ""} {u.fullName ? `- ${u.fullName}` : ""}
+          </option>
         ))}
       </select>
       <label>Start Date</label>

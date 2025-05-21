@@ -14,8 +14,19 @@ const PaymentList = () => {
     setLoading(true);
     setError(null);
     try {
+      // Fetch payments with lease, property, and tenant info populated
       const res = await apiRequest.get("/payments");
-      setPayments(res.data);
+      // Map payments to include property and tenant info for display
+      const paymentsWithInfo = res.data.map(payment => ({
+        ...payment,
+        propertyDisplay: payment.lease?.property?.title
+          ? `${payment.lease.property.title} (${payment.lease.property.address})`
+          : payment.lease?.propertyId || payment.leaseId,
+        tenantDisplay: payment.lease?.tenant?.username
+          ? `${payment.lease.tenant.username}${payment.lease.tenant.fullName ? ' - ' + payment.lease.tenant.fullName : ''}`
+          : payment.lease?.tenantId || '',
+      }));
+      setPayments(paymentsWithInfo);
     } catch (err) {
       setError("Failed to load payments");
     } finally {
@@ -80,15 +91,15 @@ const PaymentList = () => {
         <ul>
           {payments.map((payment) => (
             <li key={payment.id} style={{marginBottom: 12, border: "1px solid #eee", padding: 8, borderRadius: 6}}>
-              <strong>Lease:</strong> {payment.leaseId}<br />
+              <strong>Lease:</strong> {payment.propertyDisplay} — Tenant: {payment.tenantDisplay}<br />
               <strong>Amount:</strong> ${payment.amount}<br />
               <strong>Date:</strong> {payment.date}<br />
               <strong>Status:</strong> {payment.status}<br />
+              <span style={{fontSize: '0.95em', color: '#666'}}>
+                {payment.status === 'pending' ? 'This is a payment you owe as the tenant for this lease.' : 'This payment has been marked as paid.'}
+              </span><br />
               <button onClick={() => handleEdit(payment)}>Edit</button>
               <button onClick={() => handleDelete(payment.id)} style={{marginLeft: 8}}>Delete</button>
-              {payment.status !== "paid" && (
-                <button onClick={() => handleMarkPaid(payment)} style={{marginLeft: 8}}>Mark as Paid</button>
-              )}
             </li>
           ))}
         </ul>

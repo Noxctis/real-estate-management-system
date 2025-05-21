@@ -13,7 +13,14 @@ export const createLease = async (req, res) => {
 
 export const getLeases = async (req, res) => {
   try {
-    const leases = await prisma.lease.findMany({ include: { payments: true } });
+    // Include property and tenant info in lease list
+    const leases = await prisma.lease.findMany({
+      include: {
+        property: true,
+        tenant: true,
+        payments: true,
+      },
+    });
     res.status(200).json(leases);
   } catch (err) {
     res.status(500).json({ message: "Failed to fetch leases." });
@@ -24,7 +31,11 @@ export const getLease = async (req, res) => {
   try {
     const lease = await prisma.lease.findUnique({
       where: { id: req.params.id },
-      include: { payments: true },
+      include: {
+        property: true,
+        tenant: true,
+        payments: true,
+      },
     });
     if (!lease) return res.status(404).json({ message: "Lease not found." });
     res.status(200).json(lease);
