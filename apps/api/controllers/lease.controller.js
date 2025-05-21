@@ -13,17 +13,27 @@ export const createLease = async (req, res) => {
 
 export const getLeases = async (req, res) => {
   try {
-    // Include property and tenant info in lease list
-    const leases = await prisma.lease.findMany({
-      include: {
-        property: true,
-        tenant: true,
-        payments: true,
-      },
-    });
+    const userId = req.userId;
+    // Check if user is admin/owner (has properties)
+    const userProperties = await prisma.post.findMany({ where: { userId } });
+    let leases;
+    if (userProperties.length > 0) {
+      // User is an owner/admin, show leases for their properties
+      const propertyIds = userProperties.map(p => p.id);
+      leases = await prisma.lease.findMany({
+        where: { propertyId: { in: propertyIds } },
+        include: { property: true, tenant: true, payments: true },
+      });
+    } else {
+      // Regular user, show leases where they are the tenant
+      leases = await prisma.lease.findMany({
+        where: { tenantId: userId },
+        include: { property: true, tenant: true, payments: true },
+      });
+    }
     res.status(200).json(leases);
   } catch (err) {
-    res.status(500).json({ message: "Failed to fetch leases." });
+    res.status(500).json({ message: "Failed to fetch leases.", error: err.message });
   }
 };
 
@@ -40,7 +50,7 @@ export const getLease = async (req, res) => {
     if (!lease) return res.status(404).json({ message: "Lease not found." });
     res.status(200).json(lease);
   } catch (err) {
-    res.status(500).json({ message: "Failed to fetch lease." });
+    res.status(500).json({ message: "Failed to fetch lease.", error: err.message });
   }
 };
 

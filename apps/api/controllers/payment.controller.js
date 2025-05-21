@@ -13,20 +13,37 @@ export const createPayment = async (req, res) => {
 
 export const getPayments = async (req, res) => {
   try {
-    // Include lease, and for lease include property and tenant
-    const payments = await prisma.payment.findMany({
-      include: {
-        lease: {
-          include: {
-            property: true,
-            tenant: true,
-          },
+    const userId = req.userId;
+    // Find all properties owned by the user
+    const userProperties = await prisma.post.findMany({ where: { userId } });
+    let payments = [];
+    if (userProperties.length > 0) {
+      // User is an owner/admin, show payments for their properties
+      const propertyIds = userProperties.map(p => p.id);
+      const leases = await prisma.lease.findMany({ where: { propertyId: { in: propertyIds } } });
+      const leaseIds = leases.map(l => l.id);
+      payments = await prisma.payment.findMany({
+        where: { leaseId: { in: leaseIds } },
+        include: {
+          lease: { include: { property: true, tenant: true } },
         },
-      },
-    });
+      });
+      // Filter payments to only those where the property owner is the current user
+      payments = payments.filter(payment => payment.lease?.property?.userId === userId);
+    } else {
+      // Regular user, show payments where they are the tenant
+      const leases = await prisma.lease.findMany({ where: { tenantId: userId } });
+      const leaseIds = leases.map(l => l.id);
+      payments = await prisma.payment.findMany({
+        where: { leaseId: { in: leaseIds } },
+        include: {
+          lease: { include: { property: true, tenant: true } },
+        },
+      });
+    }
     res.status(200).json(payments);
   } catch (err) {
-    res.status(500).json({ message: "Failed to fetch payments." });
+    res.status(500).json({ message: "Failed to fetch payments.", error: err.message });
   }
 };
 
@@ -55,7 +72,13 @@ export const updatePayment = async (req, res) => {
     console.log('PAYMENT UPDATE BODY:', req.body);
     // Only allow valid fields for update
     const { leaseId, amount, dueDate, paidDate, status } = req.body;
-    const data = { leaseId, amount, dueDate, paidDate, status };
+    let data = { leaseId, amount, dueDate, status };
+    // If status is being set to 'paid' and paidDate is not provided, set paidDate to now
+    if (status === 'paid' && !paidDate) {
+      data.paidDate = new Date();
+    } else if (paidDate) {
+      data.paidDate = paidDate;
+    }
     const payment = await prisma.payment.update({
       where: { id: req.params.id },
       data,

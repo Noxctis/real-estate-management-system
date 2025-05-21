@@ -21,7 +21,9 @@ const PaymentList = () => {
         ...payment,
         propertyDisplay: payment.lease?.property?.title
           ? `${payment.lease.property.title} (${payment.lease.property.address})`
-          : payment.lease?.propertyId || payment.leaseId,
+          : payment.lease?.property?.address
+            ? payment.lease.property.address
+            : payment.lease?.propertyId || payment.leaseId,
         tenantDisplay: payment.lease?.tenant?.username
           ? `${payment.lease.tenant.username}${payment.lease.tenant.fullName ? ' - ' + payment.lease.tenant.fullName : ''}`
           : payment.lease?.tenantId || '',
@@ -29,6 +31,9 @@ const PaymentList = () => {
       setPayments(paymentsWithInfo);
     } catch (err) {
       setError("Failed to load payments");
+      // Log error to terminal for debugging
+      // eslint-disable-next-line no-console
+      console.error("PaymentList fetch error:", err, err?.response?.data);
     } finally {
       setLoading(false);
     }

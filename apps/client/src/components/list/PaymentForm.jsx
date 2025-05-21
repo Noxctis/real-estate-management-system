@@ -43,8 +43,8 @@ const PaymentForm = ({ onSuccess, payment, leaseId }) => {
         leaseId: form.leaseId,
         amount: form.amount ? Number(form.amount) : undefined,
         dueDate: form.date ? new Date(form.date).toISOString() : (form.dueDate ? new Date(form.dueDate).toISOString() : undefined),
-        paidDate: form.status === 'paid' ? (form.date ? new Date(form.date).toISOString() : new Date().toISOString()) : undefined,
-        status: form.status,
+        paidDate: payment && form.status === 'paid' ? (form.date ? new Date(form.date).toISOString() : new Date().toISOString()) : undefined,
+        status: payment ? form.status : 'pending', // Always 'pending' for new payments
       };
       if (payment) {
         await apiRequest.put(`/payments/${payment.id}`, payload);
@@ -89,13 +89,18 @@ const PaymentForm = ({ onSuccess, payment, leaseId }) => {
       <input name="amount" type="number" value={form.amount} onChange={handleChange} required />
       <label>Date</label>
       <input name="date" type="date" value={form.date} onChange={handleChange} required />
-      <label>Status</label>
-      <select name="status" value={form.status} onChange={handleChange} required>
-        <option value="pending">Pending</option>
-        <option value="paid">Paid</option>
-        <option value="failed">Failed</option>
-      </select>
-      <button type="submit" disabled={loading}>{loading ? "Saving..." : "Save Payment"}</button>
+      {/* Only show status dropdown if editing an existing payment */}
+      {payment && (
+        <>
+          <label>Status</label>
+          <select name="status" value={form.status} onChange={handleChange} required>
+            <option value="pending">Pending</option>
+            <option value="paid">Paid</option>
+            <option value="failed">Failed</option>
+          </select>
+        </>
+      )}
+      <button type="submit" disabled={loading}>{loading ? "Saving..." : payment ? "Save Payment" : "Submit Payment"}</button>
       {error && <div className="error">{error}</div>}
     </form>
   );
