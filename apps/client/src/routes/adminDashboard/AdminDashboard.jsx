@@ -35,7 +35,8 @@ const AdminDashboard = () => {
   // Handler to mark payment as paid
   const handleMarkPaid = async (paymentId) => {
     try {
-      await apiRequest.put(`/payments/${paymentId}`, { status: "paid" });
+      // Set paidDate to now when marking as paid
+      await apiRequest.put(`/payments/${paymentId}`, { status: "paid", paidDate: new Date().toISOString() });
       // Refresh payments after update
       const paymentRes = await apiRequest.get("/payments");
       setPayments(paymentRes.data);

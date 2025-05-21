@@ -79,7 +79,11 @@ const PaymentForm = ({ onSuccess, payment, leaseId }) => {
             <option value="">Select lease...</option>
             {leaseOptions.map((l) => (
               <option key={l.id} value={l.id}>
-                {l.propertyTitle || l.propertyId} ({l.propertyAddress || l.propertyId}) - {l.tenantUsername || l.tenantId}
+                {l.propertyTitle || l.property?.title || l.propertyAddress || l.property?.address || l.propertyId}
+                {l.propertyAddress || l.property?.address ? ` (${l.propertyAddress || l.property?.address})` : ''}
+                {l.tenantUsername || l.tenant?.username || l.tenantFullName || l.tenant?.fullName ?
+                  ` - ${l.tenantUsername || l.tenant?.username || ''}${l.tenantFullName || l.tenant?.fullName ? ' (' + (l.tenantFullName || l.tenant?.fullName) + ')' : ''}`
+                  : ''}
               </option>
             ))}
           </select>
